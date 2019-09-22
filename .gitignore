@@ -1,2 +1,3 @@
 *.txt
-urls.json
+*.json
+/data/
