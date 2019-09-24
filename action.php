@@ -1,7 +1,7 @@
 <?php
 error_reporting(!empty($_ENV['PROD']) && $_ENV['PROD'] == 'prod' ? 0 : E_ALL);
 
-$input_thresh = floatval($_POST["input-thresh"]);
+$input_thresh = floatval(str_replace(',', '.', $_POST["input-thresh"]));
 $input_url = $_POST["input-url"];
 
 if (empty($input_thresh)) {

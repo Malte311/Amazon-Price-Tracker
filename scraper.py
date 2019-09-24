@@ -33,7 +33,7 @@ def write_price(url, title, price):
 	file_name = './data/' + str(hashlib.sha256(url.encode()).hexdigest()) + '.json'
 	today = f'{now.year}-{str(now.month).zfill(2)}-{str(now.day).zfill(2)}'
 
-	if os.stat(file_name).st_size == 0:
+	if not os.path.isfile(file_name):
 		create_file(file_name, title, url)
 
 	with open(file_name, 'r') as in_file:
