@@ -33,19 +33,24 @@ def write_price(url, title, price):
 	file_name = './data/' + str(hashlib.sha256(url.encode()).hexdigest()) + '.json'
 	today = f'{now.year}-{str(now.month).zfill(2)}-{str(now.day).zfill(2)}'
 
-	with open(file_name, 'w+') as out_file:
-		if os.stat(file_name).st_size == 0:
-			data = {}
-			data['title'] = title
-			data['url'] = url
-			data[today] = {}
-		else:
-			with open(file_name, 'r') as in_file:
-				data = json.load(in_file)
-		
+	if os.stat(file_name).st_size == 0:
+		create_file(file_name, title, url)
+
+	with open(file_name, 'r') as in_file:
+		data = json.load(in_file)
+		data[today] = {}
 		data[today]['price'] = price
-	
+
+	with open(file_name, 'w') as out_file:
 		json.dump(data, out_file, indent=4, sort_keys=True)
+
+
+def create_file(file_name, title, url):
+	with open(file_name, 'w+') as file:
+		data = {}
+		data['title'] = title
+		data['url'] = url
+		json.dump(data, file, indent=4, sort_keys=True)
 
 
 def send_notification(url, title, price):
