@@ -5,7 +5,6 @@ import os
 import re
 import requests
 import smtplib
-import subprocess
 import time
 from bs4 import BeautifulSoup
 
@@ -20,6 +19,7 @@ def check_price(url, threshold):
 
 	title = soup.find(id='productTitle').get_text().strip()
 	price = soup.find(class_='a-color-price').get_text().replace('€', '').strip()
+	price = re.sub(r'[^0-9.]', '', price).strip()
 	price = float(price.replace(',', '.'))
 
 	write_price(url, title, price)
