@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 HEADERS = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'}
 MAIL_USER = ''
 MAIL_PW = ''
-MAIL_RECEIVE = ''
+MAIL_RECEIVER = ''
 
 def check_price(url, threshold):
 	page = requests.get(url, headers=HEADERS)
@@ -19,13 +19,16 @@ def check_price(url, threshold):
 
 	title = soup.find(id='productTitle').get_text().strip()
 	price = soup.find(class_='a-color-price').get_text().replace('€', '').strip()
-	price = re.sub(r'[^0-9.]', '', price).strip()
-	price = float(price.replace(',', '.'))
+	price = re.sub(r'[^0-9.]', '', price).replace(',', '.').strip()
+	try:
+		price = float(price)
 
-	write_price(url, title, price)
+		write_price(url, title, price)
 
-	if price <= threshold:
-		send_notification(url, title, price)
+		if price <= threshold:
+			send_notification(url, title, price)
+	except:
+		print(f'Price for {title} ({price}) on {url} is not valid.')
 
 
 def write_price(url, title, price):
@@ -60,20 +63,20 @@ def send_notification(url, title, price):
 	server.ehlo()
 	server.login(MAIL_USER, MAIL_PW)
 	msg = f'Subject: Amazon price fell down\n\nYou can buy {title} for {price}€ now on {url}.'.encode('utf-8')
-	server.sendmail(MAIL_USER, MAIL_RECEIVE, msg)
+	server.sendmail(MAIL_USER, MAIL_RECEIVER, msg)
 	server.quit()
 
 
 def run():
 	global MAIL_USER
 	global MAIL_PW
-	global MAIL_RECEIVE
+	global MAIL_RECEIVER
 
 	with open('./config.json') as config_file:
 		data = json.load(config_file)
 		MAIL_USER = data['mail-user']
 		MAIL_PW = data['mail-pw']
-		MAIL_RECEIVE = data['mail-receive']
+		MAIL_RECEIVER = data['mail-receive']
 
 	with open('./data/urls.json') as json_file:
 		data = json.load(json_file)
