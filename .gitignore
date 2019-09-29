@@ -1,3 +1,5 @@
-*.txt
-*.json
+.vscode
 /data/
+/py-code/config.json
+/py-code/user-agents.json
+/py-code/log.txt

@@ -16,7 +16,21 @@
 	}
 ?> -->
 
-<!DOCTYPE html>
+<?php
+error_reporting(!empty($_ENV['PROD']) && $_ENV['PROD'] == 'prod' ? 0 : E_ALL);
+
+define('KIMB-Classes', 'ok');
+require_once(__DIR__ . '/php-code/autoload.php');
+
+Template::setServerURL('http://localhost:8080/');
+$template = new Template('main');
+$template->output();
+
+
+
+?>
+
+<!-- <!DOCTYPE html>
 <html>
 
 <head>
@@ -73,4 +87,4 @@
 	?>
 </body>
 
-</html>
+</html> -->

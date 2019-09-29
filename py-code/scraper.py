@@ -95,7 +95,7 @@ def run():
 		data = json.load(config_file)
 		MAIL_USER = data['mail-user']
 		MAIL_PW = data['mail-pw']
-		MAIL_RECEIVER = data['mail-receive']
+		MAIL_RECEIVER = data['mail-receiver']
 
 	with open('./user-agents.json') as ua_file:
 		data = json.load(ua_file)
