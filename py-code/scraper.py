@@ -2,33 +2,50 @@ import datetime
 import hashlib 
 import json
 import os
+import random
 import re
 import requests
 import smtplib
 import time
 from bs4 import BeautifulSoup
 
-HEADERS = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'}
+FALLBACK_USER_AGENTS = [
+	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36',
+	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18362',
+	'Mozilla/5.0 (Windows NT 6.1; rv:60.0) Gecko/20100101 Firefox/60.0'
+]
+USER_AGENTS = FALLBACK_USER_AGENTS
+LOGFILE = 'log.txt'
 MAIL_USER = ''
 MAIL_PW = ''
 MAIL_RECEIVER = ''
 
-def check_price(url, threshold):
-	page = requests.get(url, headers=HEADERS)
+def check_price(url, threshold, errCount = -1):
+	if errCount < 0:
+		user_agent = random.choice(USER_AGENTS)
+	elif errCount < len(FALLBACK_USER_AGENTS):
+		user_agent = FALLBACK_USER_AGENTS[errCount]
+	else:
+		return
+	
+	page = requests.get(url, headers={'User-Agent': user_agent})
 	soup = BeautifulSoup(page.content, 'html.parser')
+	title = ''
+	price = 0
 
-	title = soup.find(id='productTitle').get_text().strip()
-	price = soup.find(class_='a-color-price').get_text().replace('€', '').strip()
-	price = re.sub(r'[^0-9.]', '', price).replace(',', '.').strip()
 	try:
-		price = float(price)
+		title = soup.find(id='productTitle').get_text().strip()
+		price = soup.find(class_='a-color-price').get_text().replace('€', '').replace(',', '.').strip()
+		price = float(re.sub(r'[^0-9.]', '', price).strip())
 
 		write_price(url, title, price)
 
 		if price <= threshold:
 			send_notification(url, title, price)
-	except:
-		print(f'Price for {title} ({price}) on {url} is not valid.')
+	except Exception as e:
+		errCount += 1
+		check_price(url, threshold, errCount)
+		raise Exception(f'Error for url "{url}" with title "{title}" and price "{price}":\r\n{e}')
 
 
 def write_price(url, title, price):
@@ -71,6 +88,8 @@ def run():
 	global MAIL_USER
 	global MAIL_PW
 	global MAIL_RECEIVER
+	global USER_AGENTS
+	global FALLBACK_USER_AGENTS
 
 	with open('./config.json') as config_file:
 		data = json.load(config_file)
@@ -78,10 +97,29 @@ def run():
 		MAIL_PW = data['mail-pw']
 		MAIL_RECEIVER = data['mail-receive']
 
+	with open('./user-agents.json') as ua_file:
+		data = json.load(ua_file)
+		if data['FALLBACK_USER_AGENTS']:
+			FALLBACK_USER_AGENTS = data['FALLBACK_USER_AGENTS']
+		if data['USER_AGENTS']:
+			USER_AGENTS = data['USER_AGENTS']
+
 	with open('./data/urls.json') as json_file:
 		data = json.load(json_file)
 		for d in data['urls']:
-			check_price(d['url'], d['thresh'])
+			try:
+				check_price(d['url'], d['thresh'])
+			except Exception as e:
+				log_exception(e)
+
+
+def log_exception(e):
+	if not os.path.isfile(LOGFILE):
+		with open(LOGFILE, 'w+') as file:
+			file.write(str(e) + '\r\n')
+	else:
+		with open(LOGFILE, 'a') as file:
+			file.write(str(e) + '\r\n')
 
 
 run()
