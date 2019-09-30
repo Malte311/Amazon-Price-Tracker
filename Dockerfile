@@ -1,22 +1,24 @@
-FROM python:3
-WORKDIR /py-code/
+FROM kimbtechnologies/php_nginx:latest
+
+RUN apk add --update --no-cache python3 \
+	&& mkdir /py-code/ \
+	&& chown -R www-data:www-data /py-code/ \
+	&& mkdir /php-code/data/ \
+	&& chown -R www-data:www-data /php-code/data/ \
+	&& echo $' \n\
+	# url rewriting error pages \n\
+	error_page 404 /index.php?uri=err404; \n\
+	error_page 403 /index.php?uri=err403; \n\
+	# protect private directories \n\
+	location ~ ^/(data|classes){ \n\
+		deny all; \n\
+		return 403; \n\
+	} \n\
+	' > /etc/nginx/more-server-conf.conf
+
 COPY --chown=www-data:www-data ./py-code/ /py-code/
-
-FROM php:fpm-alpine
-
-# install nginx
-RUN apk add --update --no-cache nginx \
-	&& mkdir -p /var/lib/nginx && chown -R www-data:www-data /var/lib/nginx \
-	&& mkdir -p /var/log/nginx && chown -R www-data:www-data /var/log/nginx \
-	&& mkdir -p /var/tmp/nginx && chown -R www-data:www-data /var/tmp/nginx/
-
-# add config and php scripts
-WORKDIR /php-code/
 COPY --chown=www-data:www-data ./php-code/ /php-code/
-COPY ./startup.sh /startup.sh
 
-# open port
-EXPOSE 80/tcp
+COPY ./setup.sh /startup-before.sh
 
-# run nginx and php-fpm
-CMD [ "sh", "/startup.sh" ]
+ENV PROD=prod

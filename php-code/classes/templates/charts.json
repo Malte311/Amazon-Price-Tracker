@@ -1,0 +1,9 @@
+{
+	"multiples" : {
+		"Chart" : {
+			"%%FILE%%" : "id",
+			"%%LABELTEXT%%" : "[]",
+			"%%DATATEXT%%" : "[]"
+		}
+	}
+}

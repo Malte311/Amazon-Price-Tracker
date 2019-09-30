@@ -50,7 +50,7 @@ def check_price(url, threshold, errCount = -1):
 
 def write_price(url, title, price):
 	now = datetime.datetime.now()
-	file_name = './data/' + str(hashlib.sha256(url.encode()).hexdigest()) + '.json'
+	file_name = '../php-code/data/' + str(hashlib.sha256(url.encode()).hexdigest()) + '.json'
 	today = f'{now.year}-{str(now.month).zfill(2)}-{str(now.day).zfill(2)}'
 
 	if not os.path.isfile(file_name):
@@ -104,7 +104,7 @@ def run():
 		if data['USER_AGENTS']:
 			USER_AGENTS = data['USER_AGENTS']
 
-	with open('./data/urls.json') as json_file:
+	with open('../php-code/data/urls.json') as json_file:
 		data = json.load(json_file)
 		for d in data['urls']:
 			try:

@@ -13,9 +13,11 @@ $file_path = __DIR__ . '/data/urls.json';
 if (!file_exists($file_path)) {
 	$file = fopen($file_path, 'w');
 	fclose($file);
+	$data = array();
 }
-
-$data = json_decode(file_get_contents($file_path), true);
+else {
+	$data = json_decode(file_get_contents($file_path), true);
+}
 
 $data['urls'][] = array('url' => $input_url, 'thresh' => $input_thresh);
 

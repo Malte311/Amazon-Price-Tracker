@@ -2,14 +2,18 @@ version: "2"
 
 services:
   web:
-    image: malte311/amazon-price-tracker:latest
-    container_name: amazon-scraper
+    build:
+      context: .
+    container_name: amazon-scraper-dev
     ports:
-      - "127.0.0.1:8080:80"
+      - "8080:80"
     volumes:
+      - ./php-code/:/php-code/
+      - ./py-code/:/py-code/
       - ./data/:/php-code/data/
     restart: always
     environment:
+      - PROD=dev
       - SERVERURL=https://privat.malte.5d7.eu/
       - MAIL_USER=example@gmail.com
       - MAIL_PW=password
