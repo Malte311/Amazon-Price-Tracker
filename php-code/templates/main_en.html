@@ -20,15 +20,15 @@
 	<div style="text-align: center; margin-left: 25px; margin-right: 25px; margin-top: 15px;">
 		<h3 class="text-success">Add a new article to your watchlist</h3>
 		<div class="row justify-content-center align-self-center" style="margin-bottom: 25px;">
-			<form class="form-inline" action="../action.php" method="post">
+			<form class="form-inline" action="/php-code/action.php" method="post">
 				<input class="form-control mr-sm-2" type="text" placeholder="Amazon link" name="input-url" autofocus>
 				<input class="form-control mr-sm-2" type="text" placeholder="Threshold" name="input-thresh">
 				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Add to watchlist</button>
 			</form>
 		</div>
 		<hr>
+		<h3 class="text-success">Price trend</h3>
 		<div class="row justify-content-center align-self-center" style="margin-bottom: 25px;">
-			<h3 class="text-success">Price trend</h3>
 			<div class="container">
 				<canvas id="chart-canvas"></canvas>
 			</div>

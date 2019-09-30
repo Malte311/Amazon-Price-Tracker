@@ -1,6 +1,6 @@
 FROM python:3
-WORKDIR /code/
-COPY --chown=www-data:www-data ./code/ /code/
+WORKDIR /py-code/
+COPY --chown=www-data:www-data ./py-code/ /py-code/
 
 FROM php:fpm-alpine
 
@@ -11,8 +11,8 @@ RUN apk add --update --no-cache nginx \
 	&& mkdir -p /var/tmp/nginx && chown -R www-data:www-data /var/tmp/nginx/
 
 # add config and php scripts
-WORKDIR /code/
-COPY --chown=www-data:www-data ./code/ /code/
+WORKDIR /php-code/
+COPY --chown=www-data:www-data ./php-code/ /php-code/
 COPY ./startup.sh /startup.sh
 
 # open port

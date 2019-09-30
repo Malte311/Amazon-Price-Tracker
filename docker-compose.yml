@@ -7,8 +7,9 @@ services:
     ports:
       - "127.0.0.1:8080:80"
     volumes:
-      - ./code/:/code/
-      - ./data/:/code/data/
+      - ./php-code/:/php-code/
+      - ./py-code/:/py-code/
+      - ./php-code/data/:/php-code/data/
     restart: always
     environment:
       - PROD=prod
