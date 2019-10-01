@@ -1,1 +1,36 @@
 # Amazon-Price-Tracker
+
+```bash
+
+docker run -p 8080:80 malte311/amazon-price-tracker
+
+```
+
+## Installation
+
+```yaml
+
+version: "2"
+
+services:
+  web:
+    image: malte311/amazon-price-tracker:latest
+    container_name: amazon-scraper
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - ./data/:/php-code/data/
+    restart: always
+    environment:
+      - SERVERURL=https://example.com/amazon-scraper
+      - MAIL_USER=example@gmail.com
+      - MAIL_PW=password
+      - MAIL_RECEIVER=example@mail.com
+
+```
+
+```bash
+
+docker-compose up -d
+
+```

@@ -6,14 +6,14 @@ services:
       context: .
     container_name: amazon-scraper-dev
     ports:
-      - "8080:80"
+      - "8000:80"
     volumes:
       - ./php-code/:/php-code/
       - ./py-code/:/py-code/
       - ./data/:/php-code/data/
     environment:
       - PROD=dev
-      - SERVERURL=https://privat.malte.5d7.eu
+      - SERVERURL=http://localhost:8000
       - MAIL_USER=example@gmail.com
       - MAIL_PW=password
       - MAIL_RECEIVER=example@mail.com

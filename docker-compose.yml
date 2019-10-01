@@ -10,7 +10,7 @@ services:
       - ./data/:/php-code/data/
     restart: always
     environment:
-      - SERVERURL=https://privat.malte.5d7.eu
+      - SERVERURL=https://example.com/amazon-scraper
       - MAIL_USER=example@gmail.com
       - MAIL_PW=password
       - MAIL_RECEIVER=example@mail.com
