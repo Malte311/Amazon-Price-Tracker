@@ -9,7 +9,7 @@ Template::setServerURL(!empty($_ENV['SERVERURL']) ? $_ENV['SERVERURL'] : 'http:/
 $all_charts = array();
 
 $file_extension = '.json';
-foreach (scandir(__DIR__ . './data/') as $file) {
+foreach (scandir(__DIR__ . '/data/') as $file) {
 	if (substr_compare($file, $file_extension, strlen($file) - strlen($file_extension), strlen($file_extension)) === 0 && $file != 'urls.json') {
 		$dataSet = json_decode(file_get_contents(__DIR__ . '/data/' . $file), true);
 
@@ -20,7 +20,7 @@ foreach (scandir(__DIR__ . './data/') as $file) {
 			}
 		}
 		
-		$labels = array_keys($dataSet);
+		$labels = array_diff(array_keys($dataSet), ['title', 'url']);
 
 		$all_charts[] = array(
 			"FILE" => $file,
