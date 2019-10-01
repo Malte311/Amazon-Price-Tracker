@@ -23,4 +23,6 @@ $data['urls'][] = array('url' => $input_url, 'thresh' => $input_thresh);
 
 file_put_contents($file_path, json_encode($data, JSON_PRETTY_PRINT));
 
+header('Location: ' . ( !empty($_ENV['SERVERURL']) ? $_ENV['SERVERURL'] : 'http://localhost:8000' ) . '/?saved' );
+http_response_code(303);
 ?>
