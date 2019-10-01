@@ -1,6 +1,7 @@
 FROM kimbtechnologies/php_nginx:latest
 
 RUN apk add --update --no-cache python3 \
+	&& pip3 install requests bs4 \
 	&& mkdir /py-code/ \
 	&& chown -R www-data:www-data /py-code/ \
 	&& mkdir /php-code/data/ \
