@@ -38,6 +38,9 @@ $template->includeTemplate($chartstemplate);
 if( isset($_GET['uri']) && ( $_GET['uri'] === 'err404' || $_GET['uri'] === 'err403' ) ){
 	$template->setContent('NOTE', '<h1> Error' . ( $_GET['uri'] == 'err404' ? '404' : '403' ) . '</h1>' );
 }
+else if( isset($_GET['saved']) ){
+	$template->setContent('NOTE', '<h2>Gespeichert!</h2>' );
+}
 
 $template->output();
 ?>
