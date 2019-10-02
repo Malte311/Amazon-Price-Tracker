@@ -11,9 +11,17 @@ from bs4 import BeautifulSoup
 from util import log_exception
 
 
+CONFIG_FILE = './config.json'
+UA_FILE = './user-agents.json'
+DATA_PATH = '../php-code/data/'
+DATA_URLS = DATA_PATH + 'urls.json'
+
 MAIL_USER = ''
 MAIL_PW = ''
 MAIL_RECEIVER = ''
+
+USER_AGENTS = []
+FALLBACK_USER_AGENTS = []
 
 def check_price(url, threshold, errCount = -1):
 	if errCount < 0:
@@ -45,7 +53,7 @@ def check_price(url, threshold, errCount = -1):
 
 def write_price(url, title, price):
 	now = datetime.datetime.now()
-	file_name = '../php-code/data/' + str(hashlib.sha256(url.encode()).hexdigest()) + '.json'
+	file_name = DATA_PATH + str(hashlib.sha256(url.encode()).hexdigest()) + '.json'
 	today = f'{now.year}-{str(now.month).zfill(2)}-{str(now.day).zfill(2)}'
 
 	if not os.path.isfile(file_name):
@@ -80,32 +88,35 @@ def send_notification(url, title, price):
 
 
 def run():
-	global MAIL_USER
-	global MAIL_PW
-	global MAIL_RECEIVER
-	global USER_AGENTS
-	global FALLBACK_USER_AGENTS
+	setGlobals()
 
-	with open('./config.json') as config_file:
-		data = json.load(config_file)
-		MAIL_USER = data['mail-user']
-		MAIL_PW = data['mail-pw']
-		MAIL_RECEIVER = data['mail-receiver']
-
-	with open('./user-agents.json') as ua_file:
-		data = json.load(ua_file)
-		if data['FALLBACK_USER_AGENTS']:
-			FALLBACK_USER_AGENTS = data['FALLBACK_USER_AGENTS']
-		if data['USER_AGENTS']:
-			USER_AGENTS = data['USER_AGENTS']
-
-	with open('../php-code/data/urls.json') as json_file:
+	with open(DATA_URLS) as json_file:
 		data = json.load(json_file)
 		for d in data['urls']:
 			try:
 				check_price(d['url'], d['thresh'])
 			except Exception as e:
 				log_exception(e)
+
+
+def setGlobals():
+	global MAIL_USER
+	global MAIL_PW
+	global MAIL_RECEIVER
+
+	global USER_AGENTS
+	global FALLBACK_USER_AGENTS
+
+	with open(CONFIG_FILE) as config_file:
+		data = json.load(config_file)
+		MAIL_USER = data['mail-user']
+		MAIL_PW = data['mail-pw']
+		MAIL_RECEIVER = data['mail-receiver']
+
+	with open(UA_FILE) as ua_file:
+		data = json.load(ua_file)
+		USER_AGENTS = data['USER_AGENTS']
+		FALLBACK_USER_AGENTS = data['FALLBACK_USER_AGENTS']
 
 
 if __name__ == '__main__':

@@ -1,5 +1,6 @@
 .vscode
 /php-code/data
+/py-code/__pycache__
 /py-code/config.json
 /py-code/user-agents.json
 /py-code/log.txt
