@@ -48,6 +48,7 @@ def check_price(url, threshold, errCount = -1):
 	except Exception as e:
 		errCount += 1
 		check_price(url, threshold, errCount)
+		write_price(url, title, -1) # Mark article as not available
 		raise Exception(f'Error for url "{url}" with title "{title}" and price "{price}":\r\n{e}')
 
 
