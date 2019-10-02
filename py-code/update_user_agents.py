@@ -1,7 +1,9 @@
 import json
+import os
 import requests
 import sys
 from bs4 import BeautifulSoup
+from util import log_exception
 
 
 BASE_URL = 'https://developers.whatismybrowser.com/useragents/explore/software_name/'
@@ -13,14 +15,23 @@ BROWSERS = [
 	'safari/'
 ]
 HEADERS = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'}
-FILE = './user-agents.json'
+UA_FILE = './user-agents.json'
+USER_AGENTS = [
+	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36',
+	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18362',
+	'Mozilla/5.0 (Windows NT 6.1; rv:60.0) Gecko/20100101 Firefox/60.0'
+]
 
 
 def run():
-	if len(sys.argv) > 1:
-		switch(str(sys.argv[1]))
-	else:
-		run_all()
+	try:
+		init()
+		if len(sys.argv) > 1:
+			switch(str(sys.argv[1]))
+		else:
+			run_all()
+	except Exception as e:
+		log_exception(e)
 
 
 def run_all():
@@ -57,7 +68,7 @@ def get_user_agents(url):
 		if agent.get_text().strip().lower() != 'user agent':
 			agents.append(agent.get_text().strip())
 	
-	update_user_agents(FILE, agents)
+	update_user_agents(UA_FILE, agents)
 
 
 def is_not_none(element):
@@ -75,4 +86,14 @@ def update_user_agents(file, agents):
 		json.dump(data, out_file, indent=4, sort_keys=True)
 
 
-run()
+def init():
+	if not os.path.isfile(UA_FILE):
+		with open(UA_FILE, 'w+') as file:
+			data = {}
+			data['USER_AGENTS'] = USER_AGENTS
+			data['FALLBACK_USER_AGENTS'] = USER_AGENTS
+			json.dump(data, file, indent=4, sort_keys=True)
+
+
+if __name__ == '__main__':
+	run()
