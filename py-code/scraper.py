@@ -97,12 +97,19 @@ def run():
 		MAIL_PW = data['mail-pw']
 		MAIL_RECEIVER = data['mail-receiver']
 
-	with open('./user-agents.json') as ua_file:
-		data = json.load(ua_file)
-		if data['FALLBACK_USER_AGENTS']:
-			FALLBACK_USER_AGENTS = data['FALLBACK_USER_AGENTS']
-		if data['USER_AGENTS']:
-			USER_AGENTS = data['USER_AGENTS']
+	if not os.path.isfile('./user-agents.json'):
+		with open('./user-agents.json', 'w+') as file:
+			data = {}
+			data['USER_AGENTS'] = USER_AGENTS
+			data['FALLBACK_USER_AGENTS'] = FALLBACK_USER_AGENTS
+			json.dump(data, file, indent=4, sort_keys=True)
+	else:
+		with open('./user-agents.json') as ua_file:
+			data = json.load(ua_file)
+			if data['FALLBACK_USER_AGENTS']:
+				FALLBACK_USER_AGENTS = data['FALLBACK_USER_AGENTS']
+			if data['USER_AGENTS']:
+				USER_AGENTS = data['USER_AGENTS']
 
 	with open('../php-code/data/urls.json') as json_file:
 		data = json.load(json_file)
