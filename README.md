@@ -55,8 +55,8 @@ docker-compose up -d
 
 ```bash
 
-chmod ug+x cron.sh
-crontab -e -u www-data
+chmod +x cron.sh
+crontab -e -u root
 
 ```
 
