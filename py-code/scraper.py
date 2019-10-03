@@ -29,6 +29,7 @@ def check_price(url, threshold, errCount = -1):
 	elif errCount < len(FALLBACK_USER_AGENTS):
 		user_agent = FALLBACK_USER_AGENTS[errCount]
 	else:
+		write_price(url, '', -1) # Mark article as not available
 		return
 	
 	page = requests.get(url, headers={'User-Agent': user_agent})
@@ -48,7 +49,6 @@ def check_price(url, threshold, errCount = -1):
 	except Exception as e:
 		errCount += 1
 		check_price(url, threshold, errCount)
-		write_price(url, title, -1) # Mark article as not available
 		raise Exception(f'Error for url "{url}" with title "{title}" and price "{price}":\r\n{e}')
 
 
