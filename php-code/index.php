@@ -4,43 +4,64 @@ error_reporting(!empty($_ENV['PROD']) && $_ENV['PROD'] == 'prod' ? 0 : E_ALL);
 define('KIMB-Classes', 'ok');
 require_once(__DIR__ . '/classes/autoload.php');
 
-Template::setServerURL(!empty($_ENV['SERVERURL']) ? $_ENV['SERVERURL'] : 'http://localhost:8000');
+$data_path = __DIR__ . '/data/';
+init();
 
-$all_charts = array();
+function init() {
+	global $data_path;
 
-$file_extension = '.json';
-foreach (scandir(__DIR__ . '/data/') as $file) {
-	if (substr_compare($file, $file_extension, strlen($file) - strlen($file_extension), strlen($file_extension)) === 0 && $file != 'urls.json') {
-		$dataSet = json_decode(file_get_contents(__DIR__ . '/data/' . $file), true);
+	Template::setServerURL(!empty($_ENV['SERVERURL']) ? $_ENV['SERVERURL'] : 'http://localhost:8000');
 
-		$prices = [];
-		foreach ($dataSet as $day) {
-			if (is_array($day)) {
-				$prices[] = $day['price'];
-			}
-		}
-		
-		$labels = array_diff(array_keys($dataSet), ['title', 'url']);
+	$main_template = new Template('main');
+	$charts_template = new Template('charts');
 
-		$all_charts[] = array(
-			"FILE" => $file,
-			"LABELTEXT" => json_encode($labels),
-			"DATATEXT" => json_encode($prices)
-		);
+	$all_charts = create_charts(scandir($data_path));
+
+	$charts_template->setMultipleContent('Chart', $all_charts);
+	$main_template->includeTemplate($charts_template);
+	
+	if (isset($_GET['uri']) && ($_GET['uri'] === 'err404' || $_GET['uri'] === 'err403')) {
+		$main_template->setContent('NOTE', 'Error' . ($_GET['uri'] == 'err404' ? '404' : '403'));
 	}
+	else if (isset($_GET['saved'])) {
+		$main_template->setContent('NOTE', 'Saved successfully!');
+	}
+	
+	$main_template->output();
 }
 
-$template = new Template('main');
-$chartstemplate = new Template('charts');
-$chartstemplate->setMultipleContent('Chart', $all_charts);
-$template->includeTemplate($chartstemplate);
+function create_charts($files) {
+	global $data_path;
+	
+	$all_charts = array();
+	foreach ($files as $file) {
+		if (is_json_data_file($file)) {
+			$data_set = json_decode(file_get_contents($data_path . $file), true);
+	
+			$prices = [];
+			foreach ($data_set as $day) {
+				if (is_array($day)) {
+					$prices[] = $day['price'];
+				}
+			}
+			
+			$labels = array_diff(array_keys($data_set), ['title', 'url']);
+	
+			$all_charts[] = array(
+				"FILE" => $file,
+				"LABELTEXT" => json_encode($labels),
+				"DATATEXT" => json_encode($prices)
+			);
+		}
+	}
 
-if( isset($_GET['uri']) && ( $_GET['uri'] === 'err404' || $_GET['uri'] === 'err403' ) ){
-	$template->setContent('NOTE', '<h1> Error' . ( $_GET['uri'] == 'err404' ? '404' : '403' ) . '</h1>' );
-}
-else if( isset($_GET['saved']) ){
-	$template->setContent('NOTE', '<h2>Gespeichert!</h2>' );
+	return $all_charts;
 }
 
-$template->output();
+function is_json_data_file($file) {
+	$file_extension = '.json';
+	$offset = strlen($file) - strlen($file_extension);
+	return substr_compare($file, $file_extension, $offset, strlen($file_extension)) === 0
+			&& $file != 'urls.json';
+}
 ?>
