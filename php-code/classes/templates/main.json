@@ -1,4 +1,6 @@
 {
 	"%%INNERCONTAINER%%" : "",
-	"%%NOTE%%" : ""
+	"%%NOTE%%" : "",
+	"%%NOTECOLOR%%" : "info",
+	"%%NOTEDISPLAY%%" : "none"
 }

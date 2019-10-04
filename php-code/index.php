@@ -21,10 +21,10 @@ function init() {
 	$main_template->includeTemplate($charts_template);
 	
 	if (isset($_GET['uri']) && ($_GET['uri'] === 'err404' || $_GET['uri'] === 'err403')) {
-		$main_template->setContent('NOTE', 'Error' . ($_GET['uri'] == 'err404' ? '404' : '403'));
+		display_alert($main_template, 'Error' . ($_GET['uri'] == 'err404' ? '404' : '403'), 'danger');
 	}
 	else if (isset($_GET['saved'])) {
-		$main_template->setContent('NOTE', 'Saved successfully!');
+		display_alert($main_template, 'Saved successfully!', 'success');
 	}
 	
 	$main_template->output();
@@ -65,5 +65,11 @@ function is_json_data_file($file) {
 	$offset = strlen($file) - strlen($file_extension);
 	return substr_compare($file, $file_extension, $offset, strlen($file_extension)) === 0
 			&& $file != 'urls.json';
+}
+
+function display_alert($template, $msg, $color) {
+	$template->setContent('NOTECOLOR', $color);
+	$template->setContent('NOTE', $msg);
+	$template->setContent('NOTEDISPLAY', 'block');
 }
 ?>
