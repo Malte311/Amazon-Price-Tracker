@@ -3,7 +3,8 @@
 		"Chart" : {
 			"%%FILE%%" : "id",
 			"%%LABELTEXT%%" : "[]",
-			"%%DATATEXT%%" : "[]"
+			"%%DATATEXT%%" : "[]",
+			"%%TITLE%%" : ""
 		}
 	}
 }

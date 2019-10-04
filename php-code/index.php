@@ -46,11 +46,13 @@ function create_charts($files) {
 			}
 			
 			$labels = array_diff(array_keys($data_set), ['title', 'url']);
-	
+			$title = strlen($data_set['title']) > 65 ?
+					substr($data_set['title'], 0, 65) . '...' : $data_set['title'];
 			$all_charts[] = array(
 				"FILE" => $file,
 				"LABELTEXT" => json_encode($labels),
-				"DATATEXT" => json_encode($prices)
+				"DATATEXT" => json_encode($prices),
+				"TITLE" => $title
 			);
 		}
 	}
