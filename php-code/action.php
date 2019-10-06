@@ -1,8 +1,8 @@
 <?php
 error_reporting(!empty($_ENV['PROD']) && $_ENV['PROD'] == 'prod' ? 0 : E_ALL);
 
-$input_thresh = floatval(str_replace(',', '.', $_POST["input-thresh"]));
-$input_url = $_POST["input-url"];
+$input_thresh = floatval(str_replace(',', '.', $_POST['input-thresh']));
+$input_url = $_POST['input-url'];
 
 if (empty($input_thresh)) {
 	$input_thresh = 0;
@@ -23,6 +23,6 @@ $data['urls'][] = array('url' => $input_url, 'thresh' => $input_thresh);
 
 file_put_contents($file_path, json_encode($data, JSON_PRETTY_PRINT));
 
-header('Location: ' . ( !empty($_ENV['SERVERURL']) ? $_ENV['SERVERURL'] : 'http://localhost:8000' ) . '/?saved' );
+header('Location: ' . (!empty($_ENV['SERVERURL']) ? $_ENV['SERVERURL'] : 'http://localhost:8000') . '/?saved');
 http_response_code(303);
 ?>
