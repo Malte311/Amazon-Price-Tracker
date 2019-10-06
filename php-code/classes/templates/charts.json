@@ -4,7 +4,9 @@
 			"%%FILE%%" : "id",
 			"%%LABELTEXT%%" : "[]",
 			"%%DATATEXT%%" : "[]",
-			"%%TITLE%%" : ""
+			"%%TITLE%%" : "",
+			"%%DIFF%%" : "",
+			"%%DIFFCOLOR%%": "secondary"
 		}
 	}
 }

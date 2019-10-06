@@ -38,11 +38,17 @@ function create_charts($files) {
 		if (is_json_data_file($file)) {
 			$data_set = json_decode(file_get_contents($data_path . $file), true);
 	
-			$prices = [];
+			$prices = array();
 			foreach ($data_set as $day) {
 				if (is_array($day)) {
 					$prices[] = $day['price'];
 				}
+			}
+
+			$diff = 0;
+			$prices_size = count($prices);
+			if ($prices_size > 1) {
+				$diff = $prices[$prices_size - 1] - $prices[$prices_size - 2];
 			}
 			
 			$labels = array_diff(array_keys($data_set), ['title', 'url']);
@@ -53,7 +59,9 @@ function create_charts($files) {
 				"FILE" => $file,
 				"LABELTEXT" => json_encode($labels),
 				"DATATEXT" => json_encode($prices),
-				"TITLE" => $title
+				"TITLE" => $title,
+				"DIFF" => $diff,
+				"DIFFCOLOR" => $diff < 0 ? 'success' : ($diff > 0 ? 'danger' : 'secondary')
 			);
 		}
 	}
