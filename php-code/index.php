@@ -50,7 +50,7 @@ function create_charts($files) {
 			$diff = 0;
 			$prices_size = count($prices);
 			if ($prices_size > 1) {
-				$diff = $prices[$prices_size - 1] - $prices[$prices_size - 2];
+				$diff = round($prices[$prices_size - 1] - $prices[$prices_size - 2], 2);
 			}
 			$labels = array_diff(array_keys($data_set), ['title', 'url']);
 			$title = strlen($data_set['title']) > 65 ?
