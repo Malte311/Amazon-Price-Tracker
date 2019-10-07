@@ -5,8 +5,9 @@
 	<br>
 	<form action="%%SERVERURL%%/action.php" method="post" id="form-delete">
 		<input type="hidden" name="file-name" id="file-name">
-		<a href="#" onclick="document.getElementById('file-name').value = '%%FILE%%';
-				document.getElementById('form-delete').submit()"
+		<a href="#" onclick="let c = confirm('Really delete?'); if (c == true) {
+				document.getElementById('file-name').value = '%%FILE%%';
+				document.getElementById('form-delete').submit(); }"
 				class="badge badge-danger" style="margin-left: 15px;">
 			Remove from list
 		</a>
