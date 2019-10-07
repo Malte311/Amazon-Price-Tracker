@@ -54,7 +54,6 @@ function create_charts($files) {
 			if ($prices_size > 1) {
 				$diff = $prices[$prices_size - 1] - $prices[$prices_size - 2];
 			}
-			
 			$labels = array_diff(array_keys($data_set), ['title', 'url']);
 			$title = strlen($data_set['title']) > 65 ?
 					substr($data_set['title'], 0, 65) . '...' : $data_set['title'];
@@ -63,6 +62,7 @@ function create_charts($files) {
 				"FILE" => $file,
 				"LABELTEXT" => json_encode($labels),
 				"DATATEXT" => json_encode($prices),
+				"LINK" => $data_set['url'],
 				"TITLE" => $title,
 				"DIFF" => $diff,
 				"DIFFCOLOR" => $diff < 0 ? 'success' : ($diff > 0 ? 'danger' : 'secondary')

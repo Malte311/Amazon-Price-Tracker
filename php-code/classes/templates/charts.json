@@ -4,6 +4,7 @@
 			"%%FILE%%" : "id",
 			"%%LABELTEXT%%" : "[]",
 			"%%DATATEXT%%" : "[]",
+			"%%LINK%%" : "",
 			"%%TITLE%%" : "",
 			"%%DIFF%%" : "",
 			"%%DIFFCOLOR%%": "secondary"
