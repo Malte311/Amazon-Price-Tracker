@@ -16,10 +16,7 @@ function init() {
 	$charts_template = new Template('charts');
 
 	$all_charts = create_charts(scandir($data_path));
-
-	if (isset($_GET['sort'])) {
-		$all_charts = sort_charts($all_charts, $_GET['sort']);
-	}
+	$all_charts = sort_charts($all_charts, isset($_GET['sort']) ? $_GET['sort'] : 0);
 
 	$charts_template->setMultipleContent('Chart', $all_charts);
 	$main_template->includeTemplate($charts_template);
@@ -77,14 +74,25 @@ function create_charts($files) {
 function sort_charts($charts, $num) {
 	switch ($num) {
 		case 0: // Sort by title, ascending
+			array_multisort(array_column($charts, 'TITLE'), SORT_ASC, $charts);
 			break;
 		case 1: // Sort by title, descending
+			array_multisort(array_column($charts, 'TITLE'), SORT_DESC, $charts);
 			break;
 		case 2: // Sort by price, ascending
+			array_multisort(array_map(function($e) {
+				$e = json_decode($e);
+				return $e[count($e) - 1];
+			}, array_column($charts, 'DATATEXT')), SORT_ASC, $charts);
 			break;
 		case 3: // Sort by price, descending
+			array_multisort(array_map(function($e) {
+				$e = json_decode($e);
+				return $e[count($e) - 1];
+			}, array_column($charts, 'DATATEXT')), SORT_DESC, $charts);
 			break;
 		case 4: // Sort by price difference (lowest first)
+			array_multisort(array_column($charts, 'DIFF'), SORT_ASC, $charts);
 			break;
 	}
 
