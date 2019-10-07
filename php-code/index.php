@@ -26,9 +26,10 @@ function init() {
 	
 	if (isset($_GET['uri']) && ($_GET['uri'] === 'err404' || $_GET['uri'] === 'err403')) {
 		display_alert($main_template, 'Error' . ($_GET['uri'] == 'err404' ? '404' : '403'), 'danger');
-	}
-	else if (isset($_GET['saved'])) {
+	} else if (isset($_GET['saved'])) {
 		display_alert($main_template, 'Saved successfully!', 'success');
+	} else if (isset($_GET['deleted'])) {
+		display_alert($main_template, 'Deleted successfully!', 'success');
 	}
 	
 	$main_template->output();

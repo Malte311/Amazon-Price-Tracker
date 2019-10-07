@@ -2,6 +2,16 @@
 <div>
 	<h6><a class="text-dark" href="%%LINK%%" target="_blank">%%TITLE%%</a></h6>
 	<span class="text-%%DIFFCOLOR%%">Price difference to yesterday: %%DIFF%%&euro;</span>
+	<br>
+	<form action="%%SERVERURL%%/action.php" method="post" id="form-delete">
+		<input type="hidden" name="file-name" id="file-name">
+		<a href="#" onclick="document.getElementById('file-name').value = '%%FILE%%';
+				document.getElementById('form-delete').submit()"
+				class="badge badge-danger" style="margin-left: 15px;">
+			Remove from list
+		</a>
+	</form>
+	
 	<canvas id="%%FILE%%" width="500" height="300"></canvas>
 </div>
 
