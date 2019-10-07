@@ -17,6 +17,10 @@ function init() {
 
 	$all_charts = create_charts(scandir($data_path));
 
+	if (isset($_GET['sort'])) {
+		$all_charts = sort_charts($all_charts, $_GET['sort']);
+	}
+
 	$charts_template->setMultipleContent('Chart', $all_charts);
 	$main_template->includeTemplate($charts_template);
 	
@@ -67,6 +71,23 @@ function create_charts($files) {
 	}
 
 	return $all_charts;
+}
+
+function sort_charts($charts, $num) {
+	switch ($num) {
+		case 0: // Sort by title, ascending
+			break;
+		case 1: // Sort by title, descending
+			break;
+		case 2: // Sort by price, ascending
+			break;
+		case 3: // Sort by price, descending
+			break;
+		case 4: // Sort by price difference (lowest first)
+			break;
+	}
+
+	return $charts;
 }
 
 function is_json_data_file($file) {

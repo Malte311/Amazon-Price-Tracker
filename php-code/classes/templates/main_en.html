@@ -13,11 +13,6 @@
 <body>
 	<nav class="navbar navbar-light bg-light justify-content-between">
 		<a class="navbar-brand text-primary">Amazon-Price-Tracker</a>
-		<div id="error-msg"></div>
-		<div>
-			<button class="btn btn-outline-primary my-2 my-sm-0" type="button">Help</button>
-			<button class="btn btn-outline-primary my-2 my-sm-0" type="button">Settings</button>
-		</div>
 	</nav>
 	<div class="alert alert-%%NOTECOLOR%%" role="alert"
 			style="width:50%; margin:auto; text-align:center; margin-top:20px; display: %%NOTEDISPLAY%%;">
@@ -34,10 +29,46 @@
 		</div>
 		<hr>
 		<h3 class="text-success">Price trend</h3>
-		<div class="row justify-content-center align-self-center" style="margin-bottom: 25px;">
+		<div class="container" style="margin-bottom: 25px; width: 220px;">
+			<select class="form-control" id="select-order">
+				<option>Alphabetical: A-Z</option>
+				<option>Alphabetical: Z-A</option>
+				<option>Price: Low to High</option>
+				<option>Price: High to Low</option>
+				<option>Price difference (yesterday - today)</option>">
+			</select>
+		</div>
+		<div class="row justify-content-center align-self-center" id="chart-container" style="margin-bottom: 25px;">
 			%%INNERCONTAINER%%
 		</div>
 	</div>
+	<script>
+		(function() {
+			'use strict';
+
+			let searchParams = location.search;
+			if (searchParams.includes('sort')) {
+				let sortIndex = searchParams.indexOf('sort=') + 5;
+				let sortVal = parseInt(searchParams.substring(sortIndex, sortIndex + 1));
+				sortVal = Number.isNaN(sortVal) ? 0 : sortVal;
+				document.getElementById("select-order").selectedIndex = sortVal;
+			} else {
+				document.getElementById("select-order").selectedIndex = 0;
+			}
+			
+			document.getElementById('select-order').addEventListener('change', function() {
+				let newParams = location.search;
+				if (newParams.includes('sort')) {
+					let sortIndex = newParams.indexOf('sort=') + 5;
+					newParams = newParams.substring(0, sortIndex) + this.selectedIndex + newParams.substring(sortIndex + 1);
+				} else {
+					newParams = newParams + (newParams.length > 0 ? '&sort=' : '?sort=') + this.selectedIndex;
+				}
+
+				window.location.replace(location.protocol + '//' + location.host + location.pathname + newParams);
+			});
+		})();
+	</script>
 </body>
 
 </html>
