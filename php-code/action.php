@@ -4,7 +4,7 @@ error_reporting(!empty($_ENV['PROD']) && $_ENV['PROD'] == 'prod' ? 0 : E_ALL);
 if (isset($_POST['input-url']) && isset($_POST['input-thresh'])) {
 	$input_url = $_POST['input-url'];
 	$input_thresh = floatval(str_replace(',', '.', $_POST['input-thresh']));
-	if (empty($input_thresh)) {
+	if (!preg_match('/^[0-9]*$/', $input_thresh) || empty($input_thresh)) {
 		$input_thresh = 0;
 	}
 
