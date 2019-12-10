@@ -64,7 +64,7 @@ A cronjob every 15 minutes could look like this:
 
 ```bash
 
-* /15 * * * * /bin/sh /var/docker-compose/amazon-scraper/cron.sh
+*/30 * * * * /bin/sh /var/docker-compose/amazon-scraper/cron.sh
 
 ```
 
