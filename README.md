@@ -60,10 +60,14 @@ crontab -e -u root
 
 ```
 
-A daily cronjob at 06:00 am could look like this:
+A cronjob every 15 minutes could look like this:
 
 ```bash
 
-00 6 * * * /bin/sh /var/docker-compose/amazon-scraper/cron.sh
+* /15 * * * * /bin/sh /var/docker-compose/amazon-scraper/cron.sh
 
 ```
+
+Note that the scraper has a session limit of 5 connections per session in order to avoid
+too many requests at the same time. This limit can be changed by adjusting the parameter
+given to `scraper.py` in the file `cron.sh`.
