@@ -6,6 +6,7 @@ import random
 import re
 import requests
 import smtplib
+import sys
 import time
 from bs4 import BeautifulSoup
 from util import log_exception
@@ -53,9 +54,8 @@ def check_price(url, threshold, errCount = -1):
 
 
 def write_price(url, title, price):
-	now = datetime.datetime.now()
 	file_name = DATA_PATH + str(hashlib.sha256(url.encode()).hexdigest()) + '.json'
-	today = f'{now.year}-{str(now.month).zfill(2)}-{str(now.day).zfill(2)}'
+	today = create_date()
 
 	if not os.path.isfile(file_name):
 		create_file(file_name, title, url)
@@ -87,15 +87,34 @@ def send_notification(url, title, price):
 	server.sendmail(MAIL_USER, MAIL_RECEIVER, msg)
 	server.quit()
 
+def create_date():
+	now = datetime.datetime.now()
+	today = f'{now.year}-{str(now.month).zfill(2)}-{str(now.day).zfill(2)}'
+	return today
+
+def is_already_done(url):
+	file_name = DATA_PATH + str(hashlib.sha256(url.encode()).hexdigest()) + '.json'
+	with open(file_name, 'r') as in_file:
+		data = json.load(in_file)
+		today = create_date()
+		return today in data
 
 def run():
+	if len(sys.argv) < 2:
+		exit()
+
 	setGlobals()
+	session_count = 0
 
 	with open(DATA_URLS) as json_file:
 		data = json.load(json_file)
 		for d in data['urls']:
+			if session_count >= int(sys.argv[1]):
+				break
 			try:
-				check_price(d['url'], d['thresh'])
+				if not is_already_done(d['url']):
+					check_price(d['url'], d['thresh'])
+					session_count += 1
 			except Exception as e:
 				log_exception(e)
 
