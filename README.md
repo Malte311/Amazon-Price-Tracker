@@ -60,7 +60,7 @@ crontab -e -u root
 
 ```
 
-A cronjob every 15 minutes could look like this:
+A cronjob every 30 minutes could look like this:
 
 ```bash
 
