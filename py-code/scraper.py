@@ -115,6 +115,7 @@ def run():
 				if not is_already_done(d['url']):
 					check_price(d['url'], d['thresh'])
 					session_count += 1
+					time.sleep(random.randint(5, 10)) # wait 5-10 seconds
 			except Exception as e:
 				log_exception(e)
 
