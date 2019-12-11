@@ -30,8 +30,8 @@ def check_price(url, threshold, errCount = -1):
 	elif errCount < len(FALLBACK_USER_AGENTS):
 		user_agent = FALLBACK_USER_AGENTS[errCount]
 	else:
-		write_price(url, '', -1) # Mark article as not available
-		return
+		write_price(url, '', -1)
+		raise Exception(f'No success for url "{url}".')
 	
 	page = requests.get(url, headers={'User-Agent': user_agent})
 	soup = BeautifulSoup(page.content, 'html.parser')
@@ -42,18 +42,22 @@ def check_price(url, threshold, errCount = -1):
 		title = soup.find(id='productTitle').get_text().strip()
 		price = soup.find(class_='a-color-price').get_text().replace('€', '').replace(',', '.').strip()
 		price = float(re.sub(r'[^0-9.]', '', price).strip())
+		print(price)
 
 		write_price(url, title, price)
 
 		if price <= threshold:
 			send_notification(url, title, price)
-	except Exception as e:
+	except Exception:
 		errCount += 1
+		time.sleep(random.randint(5, 10)) # wait 5-10 seconds
 		check_price(url, threshold, errCount)
-		raise Exception(f'Error for url "{url}" with title "{title}" and price "{price}":\r\n{e}')
 
 
 def write_price(url, title, price):
+	if title == '' and price == -1:
+		return
+
 	file_name = DATA_PATH + str(hashlib.sha256(url.encode()).hexdigest()) + '.json'
 	today = create_date()
 
@@ -63,7 +67,9 @@ def write_price(url, title, price):
 	with open(file_name, 'r') as in_file:
 		data = json.load(in_file)
 		data[today] = {}
-		data[today]['price'] = price
+
+		if price != -1:
+			data[today]['price'] = price
 
 	with open(file_name, 'w') as out_file:
 		json.dump(data, out_file, indent=4, sort_keys=True)
