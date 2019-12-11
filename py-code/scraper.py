@@ -94,6 +94,10 @@ def create_date():
 
 def is_already_done(url):
 	file_name = DATA_PATH + str(hashlib.sha256(url.encode()).hexdigest()) + '.json'
+	
+	if not os.path.isfile(file_name):
+		return False
+
 	with open(file_name, 'r') as in_file:
 		data = json.load(in_file)
 		today = create_date()
