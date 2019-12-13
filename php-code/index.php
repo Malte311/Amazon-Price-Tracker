@@ -63,7 +63,8 @@ function create_charts($files) {
 				"LINK" => $data_set['url'],
 				"TITLE" => $title,
 				"DIFF" => $diff,
-				"DIFFCOLOR" => $diff < 0 ? 'success' : ($diff > 0 ? 'danger' : 'secondary')
+				"DIFFCOLOR" => $diff < 0 ? 'success' : ($diff > 0 ? 'danger' : 'secondary'),
+				"LASTUPDATE" => isset($data_set['lastupdate']) ? $data_set['lastupdate'] : ""
 			);
 		}
 	}

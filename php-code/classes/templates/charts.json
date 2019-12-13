@@ -7,7 +7,8 @@
 			"%%LINK%%" : "",
 			"%%TITLE%%" : "",
 			"%%DIFF%%" : "",
-			"%%DIFFCOLOR%%": "secondary"
+			"%%DIFFCOLOR%%": "secondary",
+			"%%LASTUPDATE%%": ""
 		}
 	}
 }

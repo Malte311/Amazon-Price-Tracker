@@ -4,7 +4,7 @@ import os
 LOGFILE = 'log.txt'
 
 def log_exception(e):
-	ts = str(datetime.datetime.now())
+	ts = datetime.datetime.now().strftime("%d-%m-%Y %H:%M")
 
 	if not os.path.isfile(LOGFILE):
 		with open(LOGFILE, 'w+') as file:

@@ -1,7 +1,9 @@
 <!--MULTIPLE-Chart-BEGIN-->
 <div>
 	<h6><a class="text-dark" href="%%LINK%%" target="_blank">%%TITLE%%</a></h6>
-	<span class="text-%%DIFFCOLOR%%">Price difference to yesterday: %%DIFF%%&euro;</span>
+	<span class="text-%%DIFFCOLOR%%">Price difference to last time: %%DIFF%%&euro;</span>
+	<br>
+	<span class="text-%%DIFFCOLOR%% ">Last update: %%LASTUPDATE%%</span>
 	<br>
 	<form action="%%SERVERURL%%/action.php" method="post" id="form-delete">
 		<input type="hidden" name="file-name" id="file-name">

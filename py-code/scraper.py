@@ -42,7 +42,6 @@ def check_price(url, threshold, errCount = -1):
 		title = soup.find(id='productTitle').get_text().strip()
 		price = soup.find(class_='a-color-price').get_text().replace('€', '').replace(',', '.').strip()
 		price = float(re.sub(r'[^0-9.]', '', price).strip())
-		print(price)
 
 		write_price(url, title, price)
 
@@ -67,6 +66,7 @@ def write_price(url, title, price):
 	with open(file_name, 'r') as in_file:
 		data = json.load(in_file)
 		data[today] = {}
+		data['lastupdate'] = datetime.datetime.now().strftime("%d-%m-%Y %H:%M")
 
 		if price != -1:
 			data[today]['price'] = price
