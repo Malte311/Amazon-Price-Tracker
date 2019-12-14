@@ -8,6 +8,7 @@ import requests
 import smtplib
 import sys
 import time
+import traceback
 from bs4 import BeautifulSoup
 from util import log_exception
 
@@ -30,7 +31,7 @@ def check_price(url, threshold, errCount = -1):
 	elif errCount < len(FALLBACK_USER_AGENTS):
 		user_agent = FALLBACK_USER_AGENTS[errCount]
 	else:
-		write_price(url, '', -1)
+		write_price(url, '', -1) # Mark article as not available
 		raise Exception(f'No success for url "{url}".')
 	
 	page = requests.get(url, headers={'User-Agent': user_agent})
@@ -40,7 +41,23 @@ def check_price(url, threshold, errCount = -1):
 
 	try:
 		title = soup.find(id='productTitle').get_text().strip()
-		price = soup.find(class_='a-color-price').get_text().replace('€', '').replace(',', '.').strip()
+		
+		prices = soup.find_all(class_='a-color-price')
+		html = str(soup)
+		for p in prices:
+			if p is None:
+				continue
+
+			p = p.get_text().strip()
+			if html.index(title) < html.index(p) and 'Preis' not in p:
+				price = p
+				break
+
+		if 'Derzeit nicht verfügbar' in price or '€' not in price:
+			write_price(url, title, -1) # Mark article as not available
+			return
+		
+		price = price.replace('€', '').replace(',', '.').strip()
 		price = float(re.sub(r'[^0-9.]', '', price).strip())
 
 		write_price(url, title, price)
@@ -126,8 +143,8 @@ def run():
 					check_price(d['url'], d['thresh'])
 					session_count += 1
 					time.sleep(random.randint(5, 10)) # wait 5-10 seconds
-			except Exception as e:
-				log_exception(e)
+			except Exception:
+				log_exception('Exception for url "' + str(d['url']) + '":\r\n' + str(traceback.format_exc()))
 
 
 def setGlobals():

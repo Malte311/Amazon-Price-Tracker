@@ -42,7 +42,7 @@ function create_charts($files) {
 	
 			$prices = array();
 			foreach ($data_set as $day) {
-				if (is_array($day)) {
+				if (is_array($day) && isset($day['price'])) {
 					$prices[] = $day['price'];
 				}
 			}
@@ -52,7 +52,7 @@ function create_charts($files) {
 			if ($prices_size > 1) {
 				$diff = round($prices[$prices_size - 1] - $prices[$prices_size - 2], 2);
 			}
-			$labels = array_diff(array_keys($data_set), ['title', 'url']);
+			$labels = array_diff(array_keys($data_set), ['title', 'url', 'lastupdate']);
 			$title = strlen($data_set['title']) > 65 ?
 					substr($data_set['title'], 0, 65) . '...' : $data_set['title'];
 			$title = str_replace('"', '', str_replace('\'', '', $title));
