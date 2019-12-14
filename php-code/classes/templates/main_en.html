@@ -53,20 +53,32 @@
 				sortVal = Number.isNaN(sortVal) ? 0 : sortVal;
 				document.getElementById("select-order").selectedIndex = sortVal;
 			} else {
-				document.getElementById("select-order").selectedIndex = 0;
+				let sortVal = localStorage.getItem('sort');
+				if (sortVal != undefined && sortVal != null) {
+					let newParams = updateParams(sortVal);
+					window.location.replace(location.protocol + '//' + location.host + location.pathname + newParams);
+				} else {
+					document.getElementById("select-order").selectedIndex = 0;
+				}
 			}
 			
 			document.getElementById('select-order').addEventListener('change', function() {
+				let newParams = updateParams(this.selectedIndex);
+				localStorage.setItem('sort', this.selectedIndex);
+				window.location.replace(location.protocol + '//' + location.host + location.pathname + newParams);
+			});
+
+			function updateParams(sortVal) {
 				let newParams = location.search;
 				if (newParams.includes('sort')) {
 					let sortIndex = newParams.indexOf('sort=') + 5;
-					newParams = newParams.substring(0, sortIndex) + this.selectedIndex + newParams.substring(sortIndex + 1);
+					newParams = newParams.substring(0, sortIndex) + sortVal + newParams.substring(sortIndex + 1);
 				} else {
-					newParams = newParams + (newParams.length > 0 ? '&sort=' : '?sort=') + this.selectedIndex;
+					newParams = newParams + (newParams.length > 0 ? '&sort=' : '?sort=') + sortVal;
 				}
 
-				window.location.replace(location.protocol + '//' + location.host + location.pathname + newParams);
-			});
+				return newParams;
+			}
 		})();
 	</script>
 </body>
