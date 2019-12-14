@@ -2,9 +2,10 @@
 
 A simple tool to track prices on amazon.de.
 > Note: Other amazon sites, such as amazon.com, wont work. If you want to track prices on other
-> amazon websites other than amazon.de, you have to adjust the `/py-code/scraper.py` file. In the
+> amazon websites different from amazon.de, you have to adjust the `/py-code/scraper.py` file. In the
 > `check_price()` function, exchange the id for the title element as well as the class for the
-> price element with the correct value for that other website.
+> price element with the correct value for that other website. Moreover, the hardcoded strings inside
+> the if statements as well as the currency sign have to be adjusted, too.
 
 ## Installation (via Docker)
 
