@@ -6,6 +6,9 @@ A simple tool to track prices on amazon.de.
 > `check_price()` function, exchange the id for the title element as well as the class for the
 > price element with the correct value for that other website. Moreover, the hardcoded strings inside
 > the if statements as well as the currency sign have to be adjusted, too.
+>
+> Also remember that you should not make this service publicly available on your server because users
+> can type in arbitrary inputs which are not checked properly (which can be very dangerous).
 
 ## Installation (via Docker)
 
