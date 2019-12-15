@@ -36,31 +36,39 @@ def check_price(url, threshold, errCount = -1):
 	
 	page = requests.get(url, headers={'User-Agent': user_agent})
 	soup = BeautifulSoup(page.content, 'html.parser')
+	html = str(soup)
 	title = ''
-	price = 0
+	price = None
 
 	try:
 		title = soup.find(id='productTitle').get_text().strip()
+
+		try:
+			queue = [soup.find(text='Preis:').find_next(class_='a-color-price')]
+		except Exception:
+			queue = []
+		finally:
+			queue.extend(soup.find_all(class_='a-color-price'))
 		
-		prices = soup.find_all(class_='a-color-price')
-		html = str(soup)
-		for p in prices:
+		for p in queue:
 			if p is None:
 				continue
 
 			p = p.get_text().strip()
-			if html.index(title) < html.index(p) and 'Preis' not in p:
+			if 'Derzeit nicht verfügbar' in p: # 'Currently not available'
+				write_price(url, title, -1) # Mark article as not available
+				return
+
+			if html.index(title) < html.index(p) and '€' in p and 'Preis' not in p:
 				price = p
 				break
-
-		if 'Derzeit nicht verfügbar' in price or '€' not in price:
-			write_price(url, title, -1) # Mark article as not available
-			return
 		
-		price = price.replace('€', '').replace(',', '.').strip()
-		price = float(re.sub(r'[^0-9.]', '', price).strip())
-
-		write_price(url, title, price)
+		if price is not None:
+			price = price.replace('€', '').replace('.', '').replace(',', '.').strip()
+			price = float(re.sub(r'[^0-9.]', '', price).strip())
+			write_price(url, title, price)
+		else:
+			write_price(url, title, -1) # Mark article as not available
 
 		if price <= threshold:
 			send_notification(url, title, price)
