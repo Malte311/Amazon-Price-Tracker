@@ -57,6 +57,7 @@ function create_charts($files) {
 			$title = strlen($data_set['title']) > 65 ?
 					substr($data_set['title'], 0, 65) . '...' : $data_set['title'];
 			$title = str_replace('"', '', str_replace('\'', '', $title));
+			$colors = get_chart_color($diff);
 			$all_charts[] = array(
 				"FILE" => $file,
 				"LABELTEXT" => json_encode($labels),
@@ -65,7 +66,9 @@ function create_charts($files) {
 				"TITLE" => $title,
 				"DIFF" => $diff,
 				"DIFFCOLOR" => $diff < 0 ? 'success' : ($diff > 0 ? 'danger' : 'secondary'),
-				"LASTUPDATE" => isset($data_set['lastupdate']) ? $data_set['lastupdate'] : ""
+				"LASTUPDATE" => isset($data_set['lastupdate']) ? $data_set['lastupdate'] : "",
+				"BGCOLOR" => $colors['bg'],
+				"BOCOLOR" => $colors['bo']
 			);
 		}
 	}
@@ -112,5 +115,15 @@ function display_alert($template, $msg, $color) {
 	$template->setContent('NOTECOLOR', $color);
 	$template->setContent('NOTE', $msg);
 	$template->setContent('NOTEDISPLAY', 'block');
+}
+
+function get_chart_color($diff) {
+	if (intval($diff) === 0) { // blue
+		return array('bg' => 'rgba(80, 189, 255, 0.2)', 'bo' => 'rgba(80, 189, 255, 1)');
+	} else if (intval($diff) < 0) { // green
+		return array('bg' => 'rgba(0, 204, 0, 0.2)', 'bo' => 'rgba(0, 204, 0, 1)');
+	} else { // red
+		return array('bg' => 'rgba(255, 99, 132, 0.2)', 'bo' => 'rgba(255, 99, 132, 1)');
+	}
 }
 ?>

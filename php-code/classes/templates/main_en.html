@@ -11,15 +11,15 @@
 </head>
 
 <body>
-	<nav class="navbar navbar-light bg-light justify-content-between">
-		<a class="navbar-brand text-primary">Amazon-Price-Tracker</a>
+	<nav class="navbar navbar-light bg-dark justify-content-between">
+		<a class="navbar-brand text-light">Amazon-Price-Tracker</a>
 	</nav>
 	<div class="alert alert-%%NOTECOLOR%%" role="alert"
 			style="width:50%; margin:auto; text-align:center; margin-top:20px; display: %%NOTEDISPLAY%%;">
 		<b>%%NOTE%%</b>
 	</div>
-	<div style="text-align: center; margin-left: 25px; margin-right: 25px; margin-top: 15px;">
-		<h3 class="text-success">Add a new article to your watchlist</h3>
+	<div class="bg-light" style="text-align: center; margin-left: 25px; margin-right: 25px; margin-top: 15px;">
+		<h3 class="text-dark">Add a new article to your watchlist</h3>
 		<div class="row justify-content-center align-self-center" style="margin-bottom: 25px;">
 			<form class="form-inline" action="%%SERVERURL%%/action.php" method="post">
 				<input class="form-control mr-sm-2" type="text" placeholder="Amazon link" name="input-url" autofocus>
@@ -28,7 +28,7 @@
 			</form>
 		</div>
 		<hr>
-		<h3 class="text-success">Price trend</h3>
+		<h3 class="text-dark">Price trend</h3>
 		<div class="container" style="margin-bottom: 25px; width: 220px;">
 			<select class="form-control" id="select-order">
 				<option>Alphabetical: A-Z</option>

@@ -8,7 +8,9 @@
 			"%%TITLE%%" : "",
 			"%%DIFF%%" : "",
 			"%%DIFFCOLOR%%": "secondary",
-			"%%LASTUPDATE%%": ""
+			"%%LASTUPDATE%%": "",
+			"%%BGCOLOR%%": "",
+			"%%BOCOLOR%%": ""
 		}
 	}
 }
