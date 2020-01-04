@@ -118,9 +118,9 @@ function display_alert($template, $msg, $color) {
 }
 
 function get_chart_color($diff) {
-	if (floatval($diff) === 0) { // blue
+	if (floatval($diff) === 0.0) { // blue
 		return array('bg' => 'rgba(80, 189, 255, 0.2)', 'bo' => 'rgba(80, 189, 255, 1)');
-	} else if (floatval($diff) < 0) { // green
+	} else if (floatval($diff) < 0.0) { // green
 		return array('bg' => 'rgba(0, 204, 0, 0.2)', 'bo' => 'rgba(0, 204, 0, 1)');
 	} else { // red
 		return array('bg' => 'rgba(255, 99, 132, 0.2)', 'bo' => 'rgba(255, 99, 132, 1)');
