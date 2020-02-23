@@ -33,7 +33,13 @@ function delete_item($file_name) {
 }
 
 function add_item($input_url, $input_thresh) {
+	if (strlen($input_url) < 1) {
+		return;
+	}
+
 	$file_path = __DIR__ . '/data/urls.json';
+	$cutIndex = strpos($input_url, '/ref=');
+	$input_url = substr($input_url, 0, $cutIndex > 0 ? $cutIndex : strlen($input_url));
 
 	if (!file_exists($file_path)) {
 		$file = fopen($file_path, 'w');
