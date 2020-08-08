@@ -17,6 +17,7 @@ CONFIG_FILE = './config.json'
 UA_FILE = './user-agents.json'
 DATA_PATH = '../php-code/data/'
 DATA_URLS = DATA_PATH + 'urls.json'
+DATA_PAUSE =  DATA_PATH + 'pause.json'
 
 MAIL_USER = ''
 MAIL_PW = ''
@@ -74,7 +75,7 @@ def check_price(url, threshold, errCount = -1):
 			send_notification(url, title, price)
 	except Exception:
 		errCount += 1
-		time.sleep(random.randint(5, 10)) # wait 5-10 seconds
+		time.sleep(random.randint(30, 90)) # wait 30-90 seconds
 		check_price(url, threshold, errCount)
 
 
@@ -134,6 +135,25 @@ def is_already_done(url):
 		today = create_date()
 		return today in data
 
+def pause_execution(url):
+	if not os.path.isfile(DATA_PAUSE):
+		with open(DATA_PAUSE, 'w+') as file:
+			data = {}
+			json.dump(data, file, indent=4, sort_keys=True)
+
+	with open(DATA_PAUSE, 'r') as file:
+		data = json.load(file)
+		data[url] = int(time.time()) + 432000 # 432000 seconds are five days
+
+	with open(DATA_PAUSE, 'w') as file:
+		json.dump(data, file, indent=4, sort_keys=True)
+
+def is_paused(url):
+	with open(DATA_PAUSE, 'r') as file:
+		data = json.load(file)
+		today = int(time.time())
+		return url in data and data[url] >= today
+
 def run():
 	if len(sys.argv) < 2:
 		exit()
@@ -147,12 +167,13 @@ def run():
 			if session_count >= int(sys.argv[1]):
 				break
 			try:
-				if not is_already_done(d['url']):
+				if not is_already_done(d['url']) and not is_paused(d['url']):
 					check_price(d['url'], d['thresh'])
 					session_count += 1
-					time.sleep(random.randint(5, 10)) # wait 5-10 seconds
+					time.sleep(random.randint(30, 90)) # wait 30-90 seconds
 			except Exception:
 				log_exception('Exception for url "' + str(d['url']) + '":\r\n' + str(traceback.format_exc()))
+				pause_execution(d['url']) # Skip this url for some time
 
 
 def setGlobals():
