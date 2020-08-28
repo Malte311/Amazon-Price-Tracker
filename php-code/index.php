@@ -108,7 +108,7 @@ function is_json_data_file($file) {
 	$file_extension = '.json';
 	$offset = strlen($file) - strlen($file_extension);
 	return substr_compare($file, $file_extension, $offset, strlen($file_extension)) === 0
-			&& $file != 'urls.json';
+			&& $file != 'urls.json' && $file != 'pause.json';
 }
 
 function display_alert($template, $msg, $color) {

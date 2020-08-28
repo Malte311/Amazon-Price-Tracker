@@ -26,6 +26,8 @@ MAIL_RECEIVER = ''
 USER_AGENTS = []
 FALLBACK_USER_AGENTS = []
 
+PAUSE_DURATION = 1209600 # = 14 days in seconds
+
 def check_price(url, threshold, errCount = -1):
 	if errCount < 0:
 		user_agent = random.choice(USER_AGENTS)
@@ -143,7 +145,7 @@ def pause_execution(url):
 
 	with open(DATA_PAUSE, 'r') as file:
 		data = json.load(file)
-		data[url] = int(time.time()) + 432000 # 432000 seconds are five days
+		data[url] = int(time.time()) + PAUSE_DURATION
 
 	with open(DATA_PAUSE, 'w') as file:
 		json.dump(data, file, indent=4, sort_keys=True)
